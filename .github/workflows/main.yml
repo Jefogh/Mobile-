@@ -18,9 +18,7 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip python3-setuptools git zip unzip openjdk-8-jdk
-          # تثبيت بعض الأدوات اللازمة لبناء التطبيقات
-          sudo apt-get install -y libffi-dev libssl-dev
+          sudo apt-get install -y python3-pip python3-setuptools git zip unzip openjdk-8-jdk libffi-dev libssl-dev
 
       - name: Install Python Dependencies
         run: |
@@ -31,11 +29,14 @@ jobs:
         run: |
           mkdir -p $ANDROID_SDK_ROOT
           cd $ANDROID_SDK_ROOT
-          # تنزيل command line tools من جوجل (يمكن تعديل الرابط حسب الإصدار)
+          # تنزيل command line tools من جوجل
           wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
           unzip commandlinetools-linux-8512546_latest.zip -d cmdline-tools
+          # يقوم الأرشيف بفك ضغط مجلد داخلي باسم "cmdline-tools"
+          # ننقل محتويات هذا المجلد إلى مجلد جديد باسم "latest"
           mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/
+          mv cmdline-tools/cmdline-tools/* cmdline-tools/latest/
+          # تأكيد قبول تراخيص SDK
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
           yes | sdkmanager --licenses
           sdkmanager "platforms;android-28" "build-tools;28.0.3" "platform-tools"
@@ -43,7 +44,6 @@ jobs:
 
       - name: Build APK with Buildozer
         run: |
-          # تأكد من أن ملف buildozer.spec موجود في جذر المشروع
           buildozer -v android debug
         shell: bash
 
