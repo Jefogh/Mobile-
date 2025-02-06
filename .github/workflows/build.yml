@@ -13,7 +13,7 @@ jobs:
       ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install System Dependencies
         run: |
@@ -29,14 +29,13 @@ jobs:
         run: |
           mkdir -p $ANDROID_SDK_ROOT
           cd $ANDROID_SDK_ROOT
-          wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-          unzip commandlinetools-linux-8512546_latest.zip -d cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          unzip cmdline-tools.zip -d cmdline-tools
           mkdir -p cmdline-tools/latest
           mv cmdline-tools/cmdline-tools/* cmdline-tools/latest/
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/30.0.3:$PATH
           yes | sdkmanager --licenses || true
-          # تثبيت إصدارات محددة من Build Tools و AIDL لتجنب المشاكل
-          sdkmanager "platforms;android-30" "build-tools;30.0.3" "platform-tools"
+          sdkmanager --install "platforms;android-30" "build-tools;30.0.3" "platform-tools"
         shell: bash
 
       - name: Accept Android Licenses Manually
@@ -46,8 +45,16 @@ jobs:
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_SDK_ROOT/licenses/android-sdk-preview-license
         shell: bash
 
+      - name: Verify AIDL Installation
+        run: |
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/30.0.3:$PATH
+          which aidl || echo "AIDL not found!"
+          ls -l $ANDROID_SDK_ROOT/build-tools/30.0.3/ || echo "Build-tools not installed properly!"
+        shell: bash
+
       - name: Build APK with Buildozer
         run: |
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/30.0.3:$PATH
           buildozer -v android debug
         shell: bash
 
