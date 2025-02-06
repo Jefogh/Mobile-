@@ -24,11 +24,11 @@ orientation = portrait
 android.permissions = INTERNET
 
 # إعدادات SDK و Build Tools (نتجنب بذلك إصدارات المعاينة)
-android.sdk = 28
-android.sdk_build_tools_version = 28.0.3
+android.sdk = 30
+android.sdk_build_tools_version = 20.0.1
 android.minapi = 21
 # تحديد إصدار NDK (يمكنك تعديله حسب احتياجاتك)
-android.ndk = 19b
+android.ndk = 22b
 
 # إعدادات التخزين الخاص (اختياري)
 android.private_storage = True
