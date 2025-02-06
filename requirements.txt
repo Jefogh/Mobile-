@@ -1,0 +1,7 @@
+kivy
+opencv-python
+torch
+torchvision
+Pillow
+requests
+numpy
