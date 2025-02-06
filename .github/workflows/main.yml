@@ -32,13 +32,12 @@ jobs:
           # تنزيل command line tools من جوجل
           wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
           unzip commandlinetools-linux-8512546_latest.zip -d cmdline-tools
-          # يقوم الأرشيف بفك ضغط مجلد داخلي باسم "cmdline-tools"
-          # ننقل محتويات هذا المجلد إلى مجلد جديد باسم "latest"
+          # ينقل محتويات المجلد المفكوك إلى مجلد جديد باسم "latest"
           mkdir -p cmdline-tools/latest
           mv cmdline-tools/cmdline-tools/* cmdline-tools/latest/
-          # تأكيد قبول تراخيص SDK
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
-          yes | sdkmanager --licenses
+          # قبول رخص SDK مع تجاهل أي خطأ في broken pipe
+          yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-28" "build-tools;28.0.3" "platform-tools"
         shell: bash
 
