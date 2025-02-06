@@ -49,7 +49,7 @@ jobs:
         run: |
           export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/30.0.3:$PATH
           which aidl || echo "AIDL not found!"
-          ls -l $ANDROID_SDK_ROOT/build-tools/30.0.3/ || echo "Build-tools not installed properly!"
+          ls -l $ANDROID_SDK_ROOT/build-tools/40.0.1/ || echo "Build-tools not installed properly!"
         shell: bash
 
       - name: Build APK with Buildozer
